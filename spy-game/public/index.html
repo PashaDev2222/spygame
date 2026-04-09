@@ -2,28 +2,28 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ШПИОН — Угадай кто</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#0a0a0f; --bg2:#0f0f1a; --bg3:#14141f; --card:#1a1a2e; --card2:#16213e;
-  --accent:#e63946; --accent2:#ff6b6b; --gold:#ffd60a; --teal:#06d6a0;
-  --blue:#4361ee; --text:#e8e8f0; --muted:#8888aa; --border:rgba(255,255,255,0.08);
-  --border2:rgba(230,57,70,0.4)
-}
+:root{--bg:#0a0a0f;--bg2:#0f0f1a;--bg3:#14141f;--card:#1a1a2e;--card2:#16213e;--accent:#e63946;--accent2:#ff6b6b;--gold:#ffd60a;--teal:#06d6a0;--blue:#4361ee;--text:#e8e8f0;--muted:#8888aa;--border:rgba(255,255,255,0.08);--border2:rgba(230,57,70,0.4)}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden;position:relative}
 body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(67,97,238,.07) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(230,57,70,.06) 0%,transparent 50%);pointer-events:none;z-index:0}
 .screen{display:none;min-height:100vh;position:relative;z-index:1}
 .screen.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
+
 .noise{position:fixed;inset:0;opacity:.025;z-index:0;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 .scanline{position:fixed;top:0;left:0;right:0;height:3px;background:rgba(230,57,70,.15);animation:scanline 4s linear infinite;pointer-events:none;z-index:999}
+
+/* ТИПОГРАФИКА */
 .logo{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,10vw,96px);letter-spacing:6px;color:var(--text);line-height:1;animation:flicker 6s infinite}
 .logo span{color:var(--accent)}
 .subtitle{font-family:'Share Tech Mono',monospace;font-size:13px;color:var(--muted);letter-spacing:4px;text-transform:uppercase;margin-top:8px}
 h2{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:3px;color:var(--text)}
 h3{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--muted)}
+
+/* КНОПКИ */
 .btn{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:16px;letter-spacing:3px;text-transform:uppercase;border:none;cursor:pointer;padding:14px 36px;border-radius:2px;transition:all .2s;position:relative;overflow:hidden}
 .btn::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,.08);opacity:0;transition:opacity .2s}
 .btn:hover::before{opacity:1}
@@ -37,25 +37,35 @@ h3{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:v
 .btn-gold{background:var(--gold);color:#000}
 .btn:disabled{opacity:.35;cursor:not-allowed}
 .btn-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
-input[type=text],input[type=number],select{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:2px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:600;padding:12px 16px;width:100%;outline:none;transition:border .2s;letter-spacing:1px}
-input:focus,select:focus{border-color:rgba(230,57,70,.5)}
+
+/* ИНПУТЫ */
+input[type=text],input[type=number]{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:2px;color:var(--text);font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:600;padding:12px 16px;width:100%;outline:none;transition:border .2s;letter-spacing:1px}
+input:focus{border-color:rgba(230,57,70,.5)}
 label{font-size:12px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;display:block;margin-bottom:6px}
 input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--border);border-radius:2px;outline:none}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer}
+
+/* КАРТОЧКИ */
 .card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:24px;width:100%;max-width:480px}
 .sep{height:1px;background:var(--border);margin:20px 0}
 .sep-label{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--muted);font-size:12px;letter-spacing:3px}
 .sep-label::before,.sep-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ЛОББИ */
+#screen-lobby{padding:20px;justify-content:flex-start;padding-top:30px}
 .lobby-layout{display:grid;grid-template-columns:1fr 300px;gap:20px;width:100%;max-width:900px;align-items:start}
-.player-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
-.player-slot{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:4px;padding:10px 6px;text-align:center;transition:all .3s;font-size:12px}
+.player-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px}
+.player-slot{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:4px;padding:12px 8px;text-align:center;transition:all .3s;font-size:13px}
 .player-slot.filled{border-color:rgba(6,214,160,.4);background:rgba(6,214,160,.05)}
 .player-slot.me .pname{color:var(--gold)!important}
-.pname{color:var(--teal);font-weight:700;font-size:11px;word-break:break-all;margin-top:4px}
-.pempty{color:var(--muted);font-size:10px;margin-top:4px}
+.pname{color:var(--teal);font-weight:700;font-size:12px;word-break:break-all;margin-top:4px}
+.pempty{color:var(--muted);font-size:11px;margin-top:4px}
 .lobby-code{font-family:'Share Tech Mono',monospace;font-size:38px;letter-spacing:8px;color:var(--gold);text-align:center;cursor:pointer}
 .lobby-code:hover{opacity:.7}
 .lobby-code-label{font-size:11px;letter-spacing:4px;color:var(--muted);text-align:center;margin-bottom:6px;text-transform:uppercase}
+
+/* РАСКРЫТИЕ РОЛИ */
+#screen-reveal{padding:20px}
 .reveal-card{background:var(--card2);border-radius:6px;width:100%;max-width:400px;padding:44px 36px;text-align:center;border:1px solid var(--border)}
 .reveal-card.spy{border-color:var(--border2);box-shadow:0 0 60px rgba(230,57,70,.15)}
 .reveal-card.civilian{border-color:rgba(6,214,160,.3);box-shadow:0 0 60px rgba(6,214,160,.08)}
@@ -70,7 +80,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 .rdot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:all .3s}
 .rdot.done{background:var(--teal)}
 .rdot.active{background:var(--accent);transform:scale(1.5)}
+
+/* ИГРОВОЙ ЭКРАН */
+#screen-game{padding:16px;justify-content:flex-start;align-items:stretch}
 .game-layout{display:grid;grid-template-columns:1fr 280px;gap:16px;width:100%;max-width:960px;margin:0 auto}
+.game-main{display:flex;flex-direction:column;gap:14px}
 .round-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
 .round-label{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:3px;color:var(--muted)}
 .timer-ring{position:relative;width:76px;height:76px;flex-shrink:0}
@@ -83,6 +97,8 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 .turn-chip{font-size:11px;font-weight:700;letter-spacing:1px;padding:4px 10px;border-radius:2px;border:1px solid var(--border);color:var(--muted);transition:all .3s}
 .turn-chip.active{border-color:var(--gold);color:var(--gold);background:rgba(255,214,10,.08)}
 .turn-chip.done{color:#444;border-color:#333;text-decoration:line-through}
+
+/* ЧАТ */
 .chat-panel{background:var(--card);border:1px solid var(--border);border-radius:4px;display:flex;flex-direction:column;height:420px}
 .chat-header{padding:10px 14px;border-bottom:1px solid var(--border);font-size:11px;letter-spacing:3px;color:var(--muted);text-transform:uppercase}
 .chat-messages{flex:1;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:6px}
@@ -96,23 +112,37 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 .chat-input-row input{flex:1;font-size:13px;padding:8px 10px}
 .sendbtn{background:var(--accent);border:none;color:#fff;padding:8px 12px;border-radius:2px;cursor:pointer;font-weight:700;font-size:13px;font-family:'Rajdhani',sans-serif;letter-spacing:1px;transition:opacity .2s}
 .sendbtn:hover{opacity:.8}
+
+/* ГОЛОСОВАНИЕ */
+#screen-vote{padding:20px;justify-content:flex-start;padding-top:30px}
 .vote-layout{display:grid;grid-template-columns:1fr 280px;gap:16px;width:100%;max-width:860px}
-.vote-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
-.vote-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:12px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
+.vote-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.vote-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:14px;text-align:center;cursor:pointer;transition:all .2s;position:relative}
 .vote-card:hover:not(.eliminated){border-color:rgba(230,57,70,.5);background:rgba(230,57,70,.05);transform:translateY(-2px)}
 .vote-card.selected{border-color:var(--accent);background:rgba(230,57,70,.1)}
 .vote-card.eliminated{opacity:.3;cursor:not-allowed}
 .vote-card.voted{cursor:default}
 .vote-count{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--muted);margin-top:4px}
 .vote-bar{height:3px;background:var(--accent);border-radius:2px;margin-top:6px;transition:width .5s}
+
+/* РЕЗУЛЬТАТ */
+#screen-result{text-align:center;padding:40px 20px}
 .result-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,12vw,96px);letter-spacing:6px;line-height:1}
 .result-title.win{color:var(--teal)}
 .result-title.lose{color:var(--accent)}
+
+/* МОДАЛКИ */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px)}
 .modal-overlay.open{display:flex}
 .modal{background:var(--card);border:1px solid var(--border2);border-radius:6px;padding:28px;width:100%;max-width:400px;animation:fadeUp .25s ease}
+.modal h2{margin-bottom:14px}
+.modal-field{margin-bottom:14px}
+
+/* NOTIFICATION */
 .notif{position:fixed;top:20px;right:20px;z-index:200;background:var(--accent);color:#fff;padding:12px 20px;border-radius:3px;font-weight:700;font-size:14px;letter-spacing:1px;animation:slideLeft .3s ease;max-width:300px}
 .notif.teal{background:var(--teal);color:#000}
+
+/* ТЕГИ */
 .tag{display:inline-block;padding:3px 10px;border-radius:1px;font-size:11px;letter-spacing:2px;font-weight:700;text-transform:uppercase}
 .tag-red{background:rgba(230,57,70,.2);color:var(--accent);border:1px solid rgba(230,57,70,.3)}
 .tag-green{background:rgba(6,214,160,.15);color:var(--teal);border:1px solid rgba(6,214,160,.3)}
@@ -123,29 +153,27 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 .conn-dot.ok{background:var(--teal)}
 .conn-dot.err{background:var(--accent)}
 .mono{font-family:'Share Tech Mono',monospace}
-.kick-btn{background:rgba(230,57,70,.3);border:none;color:#fff;border-radius:2px;padding:2px 8px;font-size:10px;cursor:pointer;margin-left:6px}
-.kick-btn:hover{background:var(--accent)}
-.countdown{font-family:'Share Tech Mono',monospace;font-size:48px;color:var(--gold);text-align:center;margin:20px 0}
+
+/* АНИМАЦИИ */
 @keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeUp{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
 @keyframes slideLeft{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
 @keyframes flicker{0%,100%{opacity:1}92%{opacity:1}93%{opacity:.8}94%{opacity:1}96%{opacity:.9}97%{opacity:1}}
 @keyframes scanline{from{transform:translateY(-100%)}to{transform:translateY(100vh)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .anim{animation:fadeIn .35s ease}
+
 @media(max-width:680px){
   .lobby-layout,.game-layout,.vote-layout{grid-template-columns:1fr}
-  .chat-panel{height:280px}
-  .player-grid{grid-template-columns:repeat(auto-fill,minmax(75px,1fr))}
-  .player-slot{padding:6px 4px}
-  .pname{font-size:9px}
+  .chat-panel{height:220px}
 }
 </style>
 </head>
 <body>
 <div class="noise"></div>
-<input type="file" id="avatar-file-input" accept="image/*" style="display:none" onchange="handleAvatarFile(this)">
 <div class="scanline"></div>
 
+<!-- ══ МЕНЮ ══ -->
 <div id="screen-menu" class="screen active">
   <div class="text-center anim" style="padding:20px">
     <div style="margin-bottom:10px"><span class="tag tag-red" id="conn-status">● ПОДКЛЮЧЕНИЕ...</span></div>
@@ -155,18 +183,21 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
       <button class="btn btn-primary" style="width:280px" onclick="openModal('create')">＋ Создать лобби</button>
       <button class="btn btn-outline" style="width:280px" onclick="openModal('join')">→ Войти в лобби</button>
     </div>
-    <div style="font-size:12px;letter-spacing:2px;color:var(--muted)">4–16 игроков · 1–3 шпиона · угадай кто</div>
+    <div style="font-size:12px;letter-spacing:2px;color:var(--muted)">4–16 игроков · один шпион · угадай кто</div>
   </div>
 </div>
 
+<!-- ══ ЛОББИ ══ -->
 <div id="screen-lobby" class="screen" style="justify-content:flex-start">
   <div style="width:100%;max-width:900px;padding:20px" class="anim">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px">
-      <div><h2 id="lobby-title">ЛОББИ</h2><div style="font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px" id="lobby-status">Ожидание игроков...</div></div>
+      <div>
+        <h2 id="lobby-title">ЛОББИ</h2>
+        <div style="font-size:12px;letter-spacing:2px;color:var(--muted);margin-top:4px" id="lobby-status">Ожидание игроков...</div>
+      </div>
       <div style="text-align:right">
-        <div class="lobby-code-label">Код лобби</div>
+        <div class="lobby-code-label">Код лобби — нажми чтобы скопировать</div>
         <div class="lobby-code" id="lobby-code-display" onclick="copyCode()">—</div>
-        <button class="btn-ghost" style="font-size:10px;margin-top:4px" onclick="shareLobby()">📤 Поделиться</button>
       </div>
     </div>
     <div class="lobby-layout">
@@ -182,23 +213,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
           <h3 style="margin-bottom:14px">Настройки</h3>
           <label>Слотов: <span class="tag tag-gold" id="slots-disp">8</span></label>
           <input type="range" min="4" max="16" value="8" id="slots-range" oninput="onSlotsChange(this.value)" style="margin-top:8px">
-          <label style="margin-top:12px">Шпионов: <span class="tag tag-gold" id="spycount-disp">1</span></label>
-          <input type="range" min="1" max="3" value="1" id="spycount-range" oninput="onSpyCountChange(this.value)" style="margin-top:8px">
-          <label style="margin-top:12px">Тема слов:</label>
-          <select id="category-select" onchange="onCategoryChange(this.value)">
-            <option value="Все темы">Все темы</option>
-            <option value="Русские стримеры">Русские стримеры</option>
-            <option value="Зарубежные стримеры">Зарубежные стримеры</option>
-            <option value="Персонажи">Персонажи</option>
-            <option value="Политики">Политики</option>
-            <option value="Рэперы">Рэперы</option>
-            <option value="Аниме">Аниме</option>
-            <option value="ФНАФ">ФНАФ</option>
-            <option value="Майнкрафт">Майнкрафт</option>
-            <option value="Соцсети">Соцсети</option>
-            <option value="Игры">Игры</option>
-            <option value="Шпионаж">Шпионаж</option>
-          </select>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:4px"><span>4</span><span>16</span></div>
           <div class="sep"></div>
           <button class="btn btn-primary" style="width:100%" id="start-btn" onclick="startGame()" disabled>▶ Начать игру</button>
           <div style="font-size:12px;color:var(--muted);text-align:center;margin-top:8px">Мин. 4 игрока</div>
@@ -209,7 +224,6 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
         <div class="card" style="padding:16px">
           <div style="font-size:11px;letter-spacing:3px;color:var(--muted);margin-bottom:6px;text-transform:uppercase">Ваш псевдоним</div>
           <div style="font-size:17px;font-weight:700;color:var(--gold)" id="my-nick-lbl">—</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:6px">Статистика: 🏆 <span id="stats-wins">0</span> | 🕵️ <span id="stats-spywins">0</span></div>
         </div>
         <button class="btn btn-ghost" style="width:100%" onclick="leaveLobby()">← Покинуть</button>
       </div>
@@ -217,250 +231,652 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
   </div>
 </div>
 
+<!-- ══ РАСКРЫТИЕ РОЛИ ══ -->
 <div id="screen-reveal" class="screen">
   <div style="text-align:center;margin-bottom:20px">
     <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted);letter-spacing:4px;text-transform:uppercase">РАЗДАЧА РОЛЕЙ</div>
   </div>
   <div class="reveal-card" id="reveal-card">
-    <div id="rv-waiting"><div style="font-size:44px;margin-bottom:14px;animation:pulse 1.5s infinite">👁</div><div id="rv-waiting-name" style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--gold);margin-bottom:8px"></div><div style="color:var(--muted);letter-spacing:2px;font-size:13px">Смотрит свою роль...</div></div>
-    <div id="rv-content" style="display:none"><div id="rv-badge" class="reveal-badge">—</div><div id="rv-icon" style="font-size:52px;margin:14px 0">?</div><div id="rv-word" class="reveal-word">—</div><div id="rv-sub" class="reveal-sub">—</div><div style="margin-top:26px"><button class="btn btn-outline" onclick="confirmRole()">Понял ✓</button></div></div>
+    <div id="rv-waiting">
+      <div style="font-size:44px;margin-bottom:14px;animation:pulse 1.5s infinite">👁</div>
+      <div id="rv-waiting-name" style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--gold);margin-bottom:8px"></div>
+      <div style="color:var(--muted);letter-spacing:2px;font-size:13px">Смотрит свою роль...</div>
+    </div>
+    <div id="rv-content" style="display:none">
+      <div id="rv-badge" class="reveal-badge">—</div>
+      <div id="rv-icon" style="font-size:52px;margin:14px 0">?</div>
+      <div id="rv-word" class="reveal-word">—</div>
+      <div id="rv-sub" class="reveal-sub">—</div>
+      <div style="margin-top:26px"><button class="btn btn-outline" onclick="confirmRole()">Понял ✓</button></div>
+    </div>
   </div>
   <div class="reveal-dots" id="reveal-dots"></div>
   <div style="font-family:'Share Tech Mono',monospace;font-size:12px;color:var(--muted);margin-top:6px;text-align:center" id="reveal-status-txt"></div>
 </div>
 
+<!-- ══ ИГРА ══ -->
 <div id="screen-game" class="screen" style="justify-content:flex-start">
   <div style="width:100%;max-width:960px;padding:16px">
     <div class="round-bar" style="margin-bottom:14px">
-      <div><div class="round-label" id="round-label">РАУНД 1</div><div class="turn-list" id="turn-list"></div></div>
-      <div class="timer-ring"><svg width="76" height="76" viewBox="0 0 76 76"><circle cx="38" cy="38" r="32" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="6"/><circle id="tcircle" cx="38" cy="38" r="32" fill="none" stroke="#06d6a0" stroke-width="6" stroke-dasharray="201.1" stroke-dashoffset="0" stroke-linecap="round" style="transition:stroke-dashoffset 1s linear,stroke .3s"/></svg><div class="timer-num" id="tnum">30</div></div>
+      <div>
+        <div class="round-label" id="round-label">РАУНД 1</div>
+        <div class="turn-list" id="turn-list"></div>
+      </div>
+      <div class="timer-ring" id="timer-ring">
+        <svg width="76" height="76" viewBox="0 0 76 76">
+          <circle cx="38" cy="38" r="32" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="6"/>
+          <circle id="tcircle" cx="38" cy="38" r="32" fill="none" stroke="#06d6a0" stroke-width="6"
+            stroke-dasharray="201.1" stroke-dashoffset="0" stroke-linecap="round" style="transition:stroke-dashoffset 1s linear,stroke .3s"/>
+        </svg>
+        <div class="timer-num" id="tnum">30</div>
+      </div>
     </div>
     <div class="game-layout">
-      <div class="game-main"><div class="card speaker-area" style="max-width:none"><div style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--muted);margin-bottom:6px">ГОВОРИТ</div><div class="speaker-name" id="speaker-name">—</div><div id="my-word-panel" style="display:none;margin-top:10px"><span style="font-size:12px;letter-spacing:2px;color:var(--muted)">Ваше слово: </span><span class="tag tag-gold" id="my-word-lbl">—</span></div></div>
-        <div class="card" style="max-width:none"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><h3>ВСЕ ИГРОКИ</h3></div><div class="player-grid" id="game-players"></div></div>
-        <div id="my-turn-panel" style="display:none" class="card" style="max-width:none"><div class="hint-box"><strong>Твоя очередь!</strong> Назови одно слово-ассоциацию вслух. Не раскрывай слово напрямую!</div><button class="btn btn-teal" style="width:100%;margin-top:12px" onclick="endMyTurn()">✓ Закончил(а) ход</button></div>
+      <div class="game-main">
+        <div class="card speaker-area" style="max-width:none">
+          <div style="font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--muted);margin-bottom:6px">ГОВОРИТ</div>
+          <div class="speaker-name" id="speaker-name">—</div>
+          <div id="my-word-panel" style="display:none;margin-top:10px">
+            <span style="font-size:12px;letter-spacing:2px;color:var(--muted)">Ваше слово: </span>
+            <span class="tag tag-gold" id="my-word-lbl">—</span>
+          </div>
+        </div>
+        <div class="card" style="max-width:none">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+            <h3>ВСЕ ИГРОКИ</h3>
+          </div>
+          <div class="player-grid" id="game-players"></div>
+        </div>
+        <div id="my-turn-panel" style="display:none" class="card" style="max-width:none">
+          <div class="hint-box"><strong>Твоя очередь!</strong> Назови одно слово-ассоциацию вслух. Не раскрывай слово напрямую!</div>
+          <button class="btn btn-teal" style="width:100%;margin-top:12px" onclick="endMyTurn()">✓ Закончил(а) ход</button>
+        </div>
       </div>
-      <div><div class="chat-panel"><div class="chat-header">💬 ЧАТ</div><div class="chat-messages" id="chat-msgs"></div><div class="chat-input-row"><input type="text" id="chat-in" placeholder="Написать..." maxlength="120" onkeydown="if(event.key==='Enter')sendChat()"><button class="sendbtn" onclick="sendChat()">→</button></div></div></div>
+      <div>
+        <div class="chat-panel">
+          <div class="chat-header">💬 ЧАТ</div>
+          <div class="chat-messages" id="chat-msgs"></div>
+          <div class="chat-input-row">
+            <input type="text" id="chat-in" placeholder="Написать..." maxlength="120" onkeydown="if(event.key==='Enter')sendChat()">
+            <button class="sendbtn" onclick="sendChat()">→</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- ══ ГОЛОСОВАНИЕ ══ -->
 <div id="screen-vote" class="screen" style="justify-content:flex-start">
   <div style="width:100%;max-width:860px;padding:20px" class="anim">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px">
-      <div><h2>ГОЛОСОВАНИЕ</h2><div style="font-size:13px;color:var(--muted);margin-top:4px">Кого подозреваешь в шпионаже?</div></div>
-      <div class="timer-ring"><svg width="76" height="76" viewBox="0 0 76 76"><circle cx="38" cy="38" r="32" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="6"/><circle id="vtcircle" cx="38" cy="38" r="32" fill="none" stroke="#e63946" stroke-width="6" stroke-dasharray="201.1" stroke-dashoffset="0" stroke-linecap="round" style="transition:stroke-dashoffset 1s linear"/></svg><div class="timer-num" id="vtnum">60</div></div>
+      <div>
+        <h2>ГОЛОСОВАНИЕ</h2>
+        <div style="font-size:13px;color:var(--muted);margin-top:4px">Кого подозреваешь в шпионаже?</div>
+      </div>
+      <div class="timer-ring" id="vtimer-ring">
+        <svg width="76" height="76" viewBox="0 0 76 76">
+          <circle cx="38" cy="38" r="32" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="6"/>
+          <circle id="vtcircle" cx="38" cy="38" r="32" fill="none" stroke="#e63946" stroke-width="6"
+            stroke-dasharray="201.1" stroke-dashoffset="0" stroke-linecap="round" style="transition:stroke-dashoffset 1s linear"/>
+        </svg>
+        <div class="timer-num" id="vtnum">60</div>
+      </div>
     </div>
     <div class="vote-layout">
-      <div><div class="vote-grid" id="vote-grid"></div><button class="btn btn-primary" style="margin-top:14px" id="confirm-vote-btn" onclick="submitVote()" disabled>▶ Подтвердить голос</button><div id="vote-done-msg" style="display:none;color:var(--teal);font-size:13px;letter-spacing:2px;margin-top:10px">✓ Голос принят. Ждём остальных...</div></div>
-      <div><div class="chat-panel"><div class="chat-header">💬 ЧАТ</div><div class="chat-messages" id="vchat-msgs"></div><div class="chat-input-row"><input type="text" id="vchat-in" placeholder="Написать..." maxlength="120" onkeydown="if(event.key==='Enter')sendVoteChat()"><button class="sendbtn" onclick="sendVoteChat()">→</button></div></div></div>
+      <div>
+        <div class="vote-grid" id="vote-grid"></div>
+        <button class="btn btn-primary" style="margin-top:14px" id="confirm-vote-btn" onclick="submitVote()" disabled>▶ Подтвердить голос</button>
+        <div id="vote-done-msg" style="display:none;color:var(--teal);font-size:13px;letter-spacing:2px;margin-top:10px">✓ Голос принят. Ждём остальных...</div>
+      </div>
+      <div>
+        <div class="chat-panel">
+          <div class="chat-header">💬 ЧАТ</div>
+          <div class="chat-messages" id="vchat-msgs"></div>
+          <div class="chat-input-row">
+            <input type="text" id="vchat-in" placeholder="Написать..." maxlength="120" onkeydown="if(event.key==='Enter')sendVoteChat()">
+            <button class="sendbtn" onclick="sendVoteChat()">→</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
+<!-- ══ РЕЗУЛЬТАТ ══ -->
 <div id="screen-result" class="screen">
   <div class="anim" style="text-align:center;padding:30px 20px">
     <div style="font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:4px;color:var(--muted);margin-bottom:14px">— ИГРА ОКОНЧЕНА —</div>
     <div class="result-title" id="res-title">—</div>
-    <div style="margin:24px 0"><div style="font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:8px;text-transform:uppercase">Шпион(ы) был(и)</div><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;color:var(--accent)" id="res-spy">—</div><div style="margin-top:8px"><span style="color:var(--muted)">Слово: </span><span class="mono" style="color:var(--teal)" id="res-word">—</span></div></div>
+    <div style="margin:24px 0">
+      <div style="font-size:12px;letter-spacing:3px;color:var(--muted);margin-bottom:8px;text-transform:uppercase">Шпион был</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;color:var(--accent)" id="res-spy">—</div>
+      <div style="margin-top:8px"><span style="color:var(--muted)">Слово: </span><span class="mono" style="color:var(--teal)" id="res-word">—</span></div>
+    </div>
     <div id="res-scoreboard" style="max-width:400px;margin:0 auto 24px"></div>
-    <div class="btn-row"><button class="btn btn-primary" id="res-restart-btn" style="display:none" onclick="restartGame()">↺ Ещё раз</button><button class="btn btn-outline" onclick="goMenu()">⌂ Меню</button></div>
-    <div id="spy-guess-panel" style="display:none;margin-top:20px"><div class="hint-box"><strong>🔍 Ты шпион!</strong> Угадай слово и укради победу:</div><div style="display:flex;gap:8px;margin-top:10px"><input type="text" id="guess-word" placeholder="Введи слово..." style="flex:1"><button class="btn btn-primary" onclick="submitSpyGuess()">Угадать!</button></div></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="res-restart-btn" style="display:none" onclick="restartGame()">↺ Ещё раз</button>
+      <button class="btn btn-outline" onclick="goMenu()">⌂ Меню</button>
+    </div>
   </div>
 </div>
 
+<!-- ══ МОДАЛКА ══ -->
 <div class="modal-overlay" id="modal">
-  <div class="modal"><h2 id="modal-title">—</h2><div class="sep"></div>
-    <div class="modal-field"><label>Ваш псевдоним</label><input type="text" id="m-nick" placeholder="Введите никнейм..." maxlength="20" onkeydown="if(event.key==='Enter')doConfirm()"></div>
-    <div class="modal-field" id="m-code-field" style="display:none"><label>Код лобби (5 цифр)</label><input type="text" id="m-code" placeholder="12345" maxlength="5" oninput="this.value=this.value.replace(/\D/g,'')"></div>
-    <div class="modal-field" id="m-slots-field" style="display:none"><label>Слотов: <span id="m-slots-disp" style="color:var(--accent)">8</span></label><input type="range" min="4" max="16" value="8" id="m-slots" oninput="document.getElementById('m-slots-disp').textContent=this.value"></div>
-    <div class="modal-field" id="m-spycount-field" style="display:none"><label>Шпионов: <span id="m-spycount-disp" style="color:var(--accent)">1</span></label><input type="range" min="1" max="3" value="1" id="m-spycount" oninput="document.getElementById('m-spycount-disp').textContent=this.value"></div>
-    <div class="modal-field" id="m-category-field" style="display:none"><label>Тема слов:</label><select id="m-category"><option value="Все темы">Все темы</option><option value="Русские стримеры">Русские стримеры</option><option value="Зарубежные стримеры">Зарубежные стримеры</option><option value="Персонажи">Персонажи</option><option value="Политики">Политики</option><option value="Рэперы">Рэперы</option><option value="Аниме">Аниме</option><option value="ФНАФ">ФНАФ</option><option value="Майнкрафт">Майнкрафт</option><option value="Соцсети">Соцсети</option><option value="Игры">Игры</option><option value="Шпионаж">Шпионаж</option></select></div>
-    <div class="btn-row"><button class="btn btn-primary" id="modal-ok-btn" onclick="doConfirm()">Продолжить</button><button class="btn btn-ghost" onclick="closeModal()">Отмена</button></div>
+  <div class="modal">
+    <h2 id="modal-title">—</h2>
+    <div class="sep"></div>
+    <div class="modal-field">
+      <label>Ваш псевдоним</label>
+      <input type="text" id="m-nick" placeholder="Введите никнейм..." maxlength="20" onkeydown="if(event.key==='Enter')doConfirm()">
+    </div>
+    <div class="modal-field" id="m-code-field" style="display:none">
+      <label>Код лобби (5 цифр)</label>
+      <input type="text" id="m-code" placeholder="12345" maxlength="5" oninput="this.value=this.value.replace(/\D/g,'')">
+    </div>
+    <div class="modal-field" id="m-slots-field" style="display:none">
+      <label>Слотов: <span id="m-slots-disp" style="color:var(--accent)">8</span></label>
+      <input type="range" min="4" max="16" value="8" id="m-slots" oninput="document.getElementById('m-slots-disp').textContent=this.value" style="margin-top:8px">
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="modal-ok-btn" onclick="doConfirm()">Продолжить</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Отмена</button>
+    </div>
   </div>
 </div>
+
+<!-- ══ УВЕДОМЛЕНИЕ ══ -->
 <div id="notif" style="display:none" class="notif"></div>
 
 <script>
-let ws = null, state = null, myId = null, modalMode = null, selectedVote = null, timerRAF = null, voteTimerRAF = null, hasVoted = false;
+// ═══════════════════════════════════
+//  СОСТОЯНИЕ
+// ═══════════════════════════════════
+let ws = null;
+let state = null;       // серверное состояние
+let myId = null;
+let modalMode = null;
+let selectedVote = null;
+let timerRAF = null;
+let voteTimerRAF = null;
+let hasVoted = false;
 
+// ═══════════════════════════════════
+//  WEBSOCKET
+// ═══════════════════════════════════
 function connect() {
   const proto = location.protocol === 'https:' ? 'wss' : 'ws';
   ws = new WebSocket(`${proto}://${location.host}/ws`);
-  ws.onopen = () => setConnStatus(true);
-  ws.onmessage = (e) => handleMsg(JSON.parse(e.data));
-  ws.onclose = () => { setConnStatus(false); setTimeout(connect, 3000); };
-  ws.onerror = () => setConnStatus(false);
-}
-function setConnStatus(ok) { let el = document.getElementById('conn-status'); if(el){ el.textContent = ok ? '● ОНЛАЙН' : '● ПЕРЕПОДКЛЮЧЕНИЕ...'; el.className = ok ? 'tag tag-green' : 'tag tag-red'; } }
-function wsSend(obj) { if(ws && ws.readyState===1) ws.send(JSON.stringify(obj)); }
 
-function handleMsg(msg){
-  if(msg.type === 'state'){ state = msg.state; myId = state.myId; renderState(); }
-  else if(msg.type === 'chat') appendChat(msg);
-  else if(msg.type === 'vote_result') showVoteResult(msg);
-  else if(msg.type === 'game_over'){ window._lastGameOver = msg; }
-  else if(msg.type === 'kicked'){ showNotif(msg.reason, 'red'); goMenu(); }
-  else if(msg.type === 'error') showNotif(msg.text, 'red');
+  ws.onopen = () => {
+    setConnStatus(true);
+  };
+
+  ws.onmessage = (e) => {
+    const msg = JSON.parse(e.data);
+    handleMsg(msg);
+  };
+
+  ws.onclose = () => {
+    setConnStatus(false);
+    setTimeout(connect, 3000);
+  };
+
+  ws.onerror = () => {
+    setConnStatus(false);
+  };
 }
 
-function renderState(){
+function setConnStatus(ok) {
+  const el = document.getElementById('conn-status');
+  if (el) {
+    el.textContent = ok ? '● ОНЛАЙН' : '● ПЕРЕПОДКЛЮЧЕНИЕ...';
+    el.className = ok ? 'tag tag-green' : 'tag tag-red';
+  }
+}
+
+function wsSend(obj) {
+  if (ws && ws.readyState === 1) ws.send(JSON.stringify(obj));
+}
+
+// ═══════════════════════════════════
+//  ОБРАБОТКА СООБЩЕНИЙ
+// ═══════════════════════════════════
+function handleMsg(msg) {
+  switch (msg.type) {
+
+    case 'created':
+      break;
+
+    case 'state':
+      const prev = state;
+      state = msg.state;
+      myId = state.myId;
+      renderState(prev);
+      break;
+
+    case 'chat':
+      appendChat(msg);
+      break;
+
+    case 'vote_result':
+      showVoteResult(msg);
+      break;
+
+    case 'game_over':
+      window._lastGameOver = msg;
+      break;
+
+    case 'error':
+      showNotif(msg.text, 'red');
+      break;
+  }
+}
+
+// ═══════════════════════════════════
+//  РЕНДЕР СОСТОЯНИЯ
+// ═══════════════════════════════════
+function renderState(prev) {
   const phase = state.phase;
-  if(phase === 'lobby') renderLobby();
-  else if(phase === 'reveal') renderReveal();
-  else if(phase === 'game') renderGame();
-  else if(phase === 'vote') renderVote();
-  else if(phase === 'result') renderResult();
-  showScreen(phase);
-}
-function showScreen(phase){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active')); document.getElementById(`screen-${phase}`).classList.add('active'); }
 
-function renderLobby(){
+  if (phase === 'lobby') renderLobby();
+  else if (phase === 'reveal') renderReveal();
+  else if (phase === 'game') renderGame();
+  else if (phase === 'vote') renderVote();
+  else if (phase === 'result') renderResult();
+
+  if (!prev || prev.phase !== phase) {
+    if (phase === 'lobby') showScreen('lobby');
+    else if (phase === 'reveal') { showScreen('reveal'); }
+    else if (phase === 'game') showScreen('game');
+    else if (phase === 'vote') { showScreen('vote'); hasVoted = false; selectedVote = null; }
+    else if (phase === 'result') showScreen('result');
+  }
+}
+
+// ── ЛОББИ ──
+function renderLobby() {
   const s = state;
   document.getElementById('lobby-code-display').textContent = s.code;
   document.getElementById('my-nick-lbl').textContent = s.players.find(p=>p.id===myId)?.nick || '—';
-  let stats = s.sessionStats || {wins:0,spyWins:0};
-  document.getElementById('stats-wins').textContent = stats.wins;
-  document.getElementById('stats-spywins').textContent = stats.spyWins;
   document.getElementById('pcount-tag').textContent = `${s.players.length} / ${s.maxSlots}`;
+  document.getElementById('lobby-title').textContent = s.hostId === myId ? 'МОЁ ЛОББИ' : 'ЛОББИ';
+  document.getElementById('lobby-status').textContent = `Игроков: ${s.players.length} / ${s.maxSlots}`;
+
   const isHost = s.hostId === myId;
   document.getElementById('host-panel').style.display = isHost ? 'block' : 'none';
   document.getElementById('guest-panel').style.display = isHost ? 'none' : 'block';
-  if(isHost){
+  if (isHost) {
     document.getElementById('start-btn').disabled = s.players.length < 4;
     document.getElementById('slots-disp').textContent = s.maxSlots;
     document.getElementById('slots-range').value = s.maxSlots;
-    document.getElementById('spycount-disp').textContent = s.spyCount;
-    document.getElementById('spycount-range').value = s.spyCount;
-    document.getElementById('category-select').value = s.category;
   }
-  let grid = document.getElementById('player-grid');
+
+  const grid = document.getElementById('player-grid');
   grid.innerHTML = '';
-  for(let i=0; i<s.maxSlots; i++){
-    let p = s.players[i];
-    let slot = document.createElement('div');
-    slot.className = 'player-slot' + (p ? ' filled' : '') + (p && p.id===myId ? ' me' : '');
-    if(p){
-      let kickBtn = (s.hostId===myId && p.id!==myId) ? `<button class="kick-btn" onclick="kickPlayer(${p.id})">✕</button>` : '';
-      slot.innerHTML = `<div style="font-size:22px">${p.photoUrl ? `<img src="${p.photoUrl}" style="width:32px;height:32px;border-radius:50%;object-fit:cover">` : p.avatar}</div><div class="pname">${p.nick}${p.id===myId?' (Вы)':''}${kickBtn}</div>`;
-    } else slot.innerHTML = `<div style="font-size:22px;opacity:.15">·</div><div class="pempty">Слот ${i+1}</div>`;
+  for (let i = 0; i < s.maxSlots; i++) {
+    const p = s.players[i];
+    const slot = document.createElement('div');
+    slot.className = 'player-slot' + (p ? ' filled' : '') + (p && p.id === myId ? ' me' : '');
+    if (p) {
+      slot.innerHTML = `<div style="font-size:22px">${p.avatar}</div><div class="pname">${p.nick}${p.id===myId?' (Вы)':''}</div>`;
+    } else {
+      slot.innerHTML = `<div style="font-size:22px;opacity:.15">·</div><div class="pempty">Слот ${i+1}</div>`;
+    }
     grid.appendChild(slot);
   }
 }
-function kickPlayer(id){ if(confirm('Кикнуть игрока?')) wsSend({type:'kick_player', targetId:id}); }
-function shareLobby(){ let url = window.location.href.split('?')[0]; navigator.clipboard.writeText(`${url}?code=${state?.code || ''}`); showNotif('Ссылка скопирована!', 'teal'); }
-function copyCode(){ navigator.clipboard.writeText(state?.code||''); showNotif('Код скопирован!', 'teal'); }
-function onSlotsChange(v){ document.getElementById('slots-disp').textContent=v; wsSend({type:'update_slots', maxSlots:parseInt(v)}); }
-function onSpyCountChange(v){ document.getElementById('spycount-disp').textContent=v; wsSend({type:'update_spy_count', spyCount:parseInt(v)}); }
-function onCategoryChange(v){ wsSend({type:'update_category', category:v}); }
-function startGame(){ wsSend({type:'start_game'}); }
-function restartGame(){ wsSend({type:'restart'}); }
-function leaveLobby(){ wsSend({type:'leave'}); }
-function goMenu(){ wsSend({type:'leave'}); showScreen('menu'); }
-function confirmRole(){ wsSend({type:'confirm_role'}); }
-function endMyTurn(){ wsSend({type:'end_turn'}); }
-function selectVote(id){ if(hasVoted)return; selectedVote=id; renderVote(); document.getElementById('confirm-vote-btn').disabled=false; }
-function submitVote(){ if(!selectedVote||hasVoted)return; hasVoted=true; wsSend({type:'vote', targetId:selectedVote}); renderVote(); }
-function submitSpyGuess(){ let word = document.getElementById('guess-word')?.value.trim(); if(word) wsSend({type:'spy_guess', word}); }
-function sendChat(){ let inp=document.getElementById('chat-in'); let t=inp.value.trim(); if(t){ wsSend({type:'chat', text:t}); inp.value=''; } }
-function sendVoteChat(){ let inp=document.getElementById('vchat-in'); let t=inp.value.trim(); if(t){ wsSend({type:'chat', text:t}); inp.value=''; } }
-function appendChat(msg){ ['chat-msgs','vchat-msgs'].forEach(id=>{ let el=document.getElementById(id); if(el){ let div=document.createElement('div'); if(msg.from==='system'){ div.className='cmsg system'; div.textContent=msg.text; }else{ div.className='cmsg'+(msg.playerId===myId?' me':''); div.innerHTML=`<span class="cauthor">${msg.avatar||''} ${msg.nick||'?'}</span>${msg.text}`; } el.appendChild(div); el.scrollTop=el.scrollHeight; } }); }
-function showVoteResult(msg){ showNotif(msg.isSpy ? `🎯 ШПИОН НАЙДЕН! ${msg.eliminatedNick}` : `❌ ${msg.eliminatedNick} — мирный!`, msg.isSpy?'teal':'red'); }
 
-function renderReveal(){
-  let s=state, dots=document.getElementById('reveal-dots'); dots.innerHTML='';
-  s.players.forEach((p,i)=>{ let d=document.createElement('div'); d.className='rdot'+(i<s.revealIdx?' done':i===s.revealIdx?' active':''); dots.appendChild(d); });
-  document.getElementById('reveal-status-txt').textContent=`Игрок ${s.revealIdx+1} / ${s.players.length}`;
-  let cur=s.players[s.revealIdx], isMyTurn=cur && cur.id===myId;
-  let card=document.getElementById('reveal-card');
-  if(isMyTurn){
-    document.getElementById('rv-waiting').style.display='none'; document.getElementById('rv-content').style.display='block';
-    let isSpy=s.isSpy; card.className='reveal-card '+(isSpy?'spy':'civilian');
-    document.getElementById('rv-badge').className='reveal-badge '+(isSpy?'spy':'civilian');
-    document.getElementById('rv-badge').textContent=isSpy?'⚠ ШПИОН':'✓ МИРНЫЙ';
-    let iconDiv=document.getElementById('rv-icon');
-    if(!isSpy && cur.photoUrl) iconDiv.innerHTML=`<img src="${cur.photoUrl}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--teal);display:block;margin:0 auto">`;
-    else iconDiv.textContent=cur.avatar;
-    document.getElementById('rv-word').className='reveal-word '+(isSpy?'spy':'civilian');
-    document.getElementById('rv-word').textContent=isSpy?'???':(s.word||'—').toUpperCase();
-    document.getElementById('rv-sub').textContent=isSpy?'Ты шпион! Слова ты не знаешь. Слушай и угадывай.':'Запомни! Не раскрывай слово напрямую.';
-  }else{
-    document.getElementById('rv-waiting').style.display='block'; document.getElementById('rv-content').style.display='none';
-    document.getElementById('rv-waiting-name').textContent=cur?.nick||'—';
+// ── РАСКРЫТИЕ РОЛИ ──
+function renderReveal() {
+  const s = state;
+  const dots = document.getElementById('reveal-dots');
+  dots.innerHTML = '';
+  s.players.forEach((p, i) => {
+    const d = document.createElement('div');
+    d.className = 'rdot' + (i < s.revealIdx ? ' done' : i === s.revealIdx ? ' active' : '');
+    dots.appendChild(d);
+  });
+  document.getElementById('reveal-status-txt').textContent = `Игрок ${s.revealIdx+1} / ${s.players.length}`;
+
+  const currentPlayer = s.players[s.revealIdx];
+  const isMyTurn = currentPlayer && currentPlayer.id === myId;
+  const card = document.getElementById('reveal-card');
+  card.className = 'reveal-card';
+
+  if (isMyTurn) {
+    document.getElementById('rv-waiting').style.display = 'none';
+    document.getElementById('rv-content').style.display = 'block';
+    const isSpy = s.isSpy;
+    card.classList.add(isSpy ? 'spy' : 'civilian');
+    if (isSpy) {
+      document.getElementById('rv-badge').className = 'reveal-badge spy';
+      document.getElementById('rv-badge').textContent = '⚠ ШПИОН';
+      document.getElementById('rv-icon').textContent = '🕵️';
+      document.getElementById('rv-word').className = 'reveal-word spy';
+      document.getElementById('rv-word').textContent = '???';
+      document.getElementById('rv-sub').textContent = 'Ты шпион! Слова ты не знаешь. Слушай и угадывай по чужим подсказкам.';
+    } else {
+      document.getElementById('rv-badge').className = 'reveal-badge civilian';
+      document.getElementById('rv-badge').textContent = '✓ МИРНЫЙ';
+      document.getElementById('rv-icon').textContent = currentPlayer.avatar;
+      document.getElementById('rv-word').className = 'reveal-word civilian';
+      document.getElementById('rv-word').textContent = (s.word || '—').toUpperCase();
+      document.getElementById('rv-sub').textContent = 'Запомни! Не раскрывай слово напрямую. Говори ассоциации.';
+    }
+  } else {
+    document.getElementById('rv-waiting').style.display = 'block';
+    document.getElementById('rv-content').style.display = 'none';
+    document.getElementById('rv-waiting-name').textContent = currentPlayer?.nick || '—';
   }
 }
 
-function renderGame(){
-  let s=state, active=s.players.filter(p=>!p.eliminated), speaker=active[s.turnIdx], isMyTurn=speaker && speaker.id===myId;
-  document.getElementById('round-label').textContent=`РАУНД ${s.round} · ХОД ${s.turnIdx+1}/${active.length}`;
-  document.getElementById('speaker-name').textContent=speaker?(speaker.nick+(speaker.id===myId?' (Вы)':'')):'—';
-  let myWordPanel=document.getElementById('my-word-panel');
-  if(s.word && !s.isSpy){ myWordPanel.style.display='block'; document.getElementById('my-word-lbl').textContent=s.word.toUpperCase(); }
-  else if(s.isSpy){ myWordPanel.style.display='block'; document.getElementById('my-word-lbl').textContent='??? (ты шпион)'; }
-  else myWordPanel.style.display='none';
-  let tl=document.getElementById('turn-list'); tl.innerHTML='';
-  active.forEach((p,i)=>{ let c=document.createElement('div'); c.className='turn-chip'+(i<s.turnIdx?' done':i===s.turnIdx?' active':''); c.textContent=p.nick; tl.appendChild(c); });
-  document.getElementById('my-turn-panel').style.display=isMyTurn?'block':'none';
-  let gp=document.getElementById('game-players'); gp.innerHTML='';
-  s.players.forEach(p=>{ let d=document.createElement('div'); d.className='player-slot'+(p.eliminated?'':' filled')+(p.id===myId?' me':''); if(p.eliminated)d.style.opacity='.3'; d.innerHTML=`<div style="font-size:22px">${p.photoUrl?`<img src="${p.photoUrl}" style="width:32px;height:32px;border-radius:50%;object-fit:cover">`:p.avatar}</div><div class="pname">${p.nick}${p.id===myId?' (Вы)':''}</div>`; gp.appendChild(d); });
-  renderTimer(s.timerEnd,30);
+// ── ИГРА ──
+function renderGame() {
+  const s = state;
+  const active = s.players.filter(p => !p.eliminated);
+  const speaker = active[s.turnIdx];
+  const isMyTurn = speaker && speaker.id === myId;
+
+  document.getElementById('round-label').textContent = `РАУНД ${s.round} · ХОД ${s.turnIdx + 1}/${active.length}`;
+  document.getElementById('speaker-name').textContent = speaker ? (speaker.nick + (speaker.id === myId ? ' (Вы)' : '')) : '—';
+
+  // Слово
+  const myWordPanel = document.getElementById('my-word-panel');
+  if (s.word && !s.isSpy) {
+    myWordPanel.style.display = 'block';
+    document.getElementById('my-word-lbl').textContent = s.word.toUpperCase();
+  } else if (s.isSpy) {
+    myWordPanel.style.display = 'block';
+    document.getElementById('my-word-lbl').textContent = '??? (ты шпион)';
+  } else {
+    myWordPanel.style.display = 'none';
+  }
+
+  // Чипы очерёдности
+  const tl = document.getElementById('turn-list');
+  tl.innerHTML = '';
+  active.forEach((p, i) => {
+    const c = document.createElement('div');
+    c.className = 'turn-chip' + (i < s.turnIdx ? ' done' : i === s.turnIdx ? ' active' : '');
+    c.textContent = p.nick;
+    tl.appendChild(c);
+  });
+
+  // Мой ход панель
+  document.getElementById('my-turn-panel').style.display = isMyTurn ? 'block' : 'none';
+
+  // Игроки
+  const gp = document.getElementById('game-players');
+  gp.innerHTML = '';
+  s.players.forEach(p => {
+    const d = document.createElement('div');
+    d.className = 'player-slot' + (p.eliminated ? '' : ' filled') + (p.id === myId ? ' me' : '');
+    if (p.eliminated) d.style.opacity = '.3';
+    d.innerHTML = `<div style="font-size:20px">${p.avatar}</div><div class="pname">${p.nick}${p.id===myId?' (Вы)':''}</div>`;
+    gp.appendChild(d);
+  });
+
+  // Таймер
+  renderTimer(s.timerEnd, 30);
 }
 
-function renderVote(){
-  let s=state, active=s.players.filter(p=>!p.eliminated), totalVoters=active.length, counts={};
-  Object.values(s.votes).forEach(id=>{ counts[id]=(counts[id]||0)+1; });
-  let grid=document.getElementById('vote-grid'); grid.innerHTML='';
-  active.forEach(p=>{ if(p.id===myId)return; let card=document.createElement('div'); card.className='vote-card'+(selectedVote===p.id?' selected':'')+(hasVoted?' voted':''); let voteCount=counts[p.id]||0, pct=totalVoters>1?Math.round(voteCount/(totalVoters-1)*100):0; card.innerHTML=`<div style="font-size:28px">${p.photoUrl?`<img src="${p.photoUrl}" style="width:36px;height:36px;border-radius:50%;object-fit:cover">`:p.avatar}</div><div style="font-weight:700;font-size:13px;margin-top:6px">${p.nick}</div><div class="vote-count">${voteCount} голос(а)</div><div class="vote-bar" style="width:${pct}%"></div>`; if(!hasVoted)card.onclick=()=>selectVote(p.id); grid.appendChild(card); });
-  document.getElementById('vote-done-msg').style.display=hasVoted?'block':'none';
-  document.getElementById('confirm-vote-btn').style.display=hasVoted?'none':'block';
-  document.getElementById('confirm-vote-btn').disabled=!selectedVote;
-  renderVoteTimer(s.timerEnd,60);
+// ── ГОЛОСОВАНИЕ ──
+function renderVote() {
+  const s = state;
+  const active = s.players.filter(p => !p.eliminated);
+  const totalVoters = active.length;
+
+  const grid = document.getElementById('vote-grid');
+  grid.innerHTML = '';
+
+  // Подсчёт голосов
+  const counts = {};
+  Object.values(s.votes).forEach(id => { counts[id] = (counts[id]||0) + 1; });
+  const votedIds = Object.keys(s.votes).map(Number);
+
+  active.forEach(p => {
+    if (p.id === myId) return;
+    const card = document.createElement('div');
+    card.className = 'vote-card' + (selectedVote === p.id ? ' selected' : '') + (hasVoted ? ' voted' : '');
+    const voteCount = counts[p.id] || 0;
+    const pct = totalVoters > 1 ? Math.round(voteCount / (totalVoters - 1) * 100) : 0;
+    card.innerHTML = `
+      <div style="font-size:28px">${p.avatar}</div>
+      <div style="font-weight:700;font-size:13px;margin-top:4px">${p.nick}</div>
+      <div class="vote-count">${voteCount} голос(а)</div>
+      <div class="vote-bar" style="width:${pct}%"></div>
+    `;
+    if (!hasVoted) card.onclick = () => selectVote(p.id);
+    grid.appendChild(card);
+  });
+
+  document.getElementById('vote-done-msg').style.display = hasVoted ? 'block' : 'none';
+  document.getElementById('confirm-vote-btn').style.display = hasVoted ? 'none' : 'block';
+  document.getElementById('confirm-vote-btn').disabled = !selectedVote;
+
+  renderVoteTimer(s.timerEnd, 60);
 }
 
-function renderResult(){
-  let s=state, lastMsg=window._lastGameOver, civilianWin=lastMsg?lastMsg.civilianWin:true;
-  let title=document.getElementById('res-title'); title.className='result-title '+(civilianWin?'win':'lose'); title.textContent=civilianWin?'ПОБЕДА!':'ШПИОН ПОБЕДИЛ!';
-  let spyNames=s.players.filter(p=>s.spyIds?.includes(p.id)).map(p=>p.nick).join(', ');
-  document.getElementById('res-spy').textContent=spyNames||'—';
-  document.getElementById('res-word').textContent=(s.word||'—').toUpperCase();
-  let sb=document.getElementById('res-scoreboard'); sb.innerHTML='<div class="sep-label">ИТОГИ</div>'+s.players.map(p=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)"><span style="display:flex;align-items:center">${p.photoUrl?`<img src="${p.photoUrl}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;margin-right:8px">`:`<span style="font-size:18px;margin-right:6px">${p.avatar}</span>`}${p.nick}${p.id===myId?' (Вы)':''}</span><span class="${s.spyIds?.includes(p.id)?'tag tag-red':'tag tag-green'}">${s.spyIds?.includes(p.id)?'ШПИОН':'МИРНЫЙ'}</span></div>`).join('');
-  let isHost=s.hostId===myId; document.getElementById('res-restart-btn').style.display=isHost?'inline-flex':'none';
-  let spyPanel=document.getElementById('spy-guess-panel'); if(spyPanel) spyPanel.style.display=s.spyIds?.includes(myId)?'block':'none';
+// ── РЕЗУЛЬТАТ ──
+function renderResult() {
+  const s = state;
+  const spy = s.players.find(p => p.id === s.spyId);
+  const me = s.players.find(p => p.id === myId);
+  const iAmSpy = me && me.id === s.spyId;
+  // Определяем победителя из последнего game_over сообщения — определяем по фазе и spyId
+  // Сервер уже прислал нам state.phase = result
+  const lastMsg = window._lastGameOver;
+  const civilianWin = lastMsg ? lastMsg.civilianWin : (iAmSpy ? false : true);
+
+  const title = document.getElementById('res-title');
+  title.className = 'result-title ' + (civilianWin ? 'win' : 'lose');
+  title.textContent = civilianWin ? 'ПОБЕДА!' : 'ШПИОН ПОБЕДИЛ!';
+
+  document.getElementById('res-spy').textContent = spy?.nick || '—';
+  document.getElementById('res-word').textContent = (s.word || '—').toUpperCase();
+
+  const sb = document.getElementById('res-scoreboard');
+  sb.innerHTML = '<div class="sep-label">ИТОГИ</div>' + s.players.map(p => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+      <span>${p.avatar} ${p.nick}${p.id===myId?' (Вы)':''}</span>
+      <span class="${p.id===s.spyId?'tag tag-red':'tag tag-green'}">${p.id===s.spyId?'ШПИОН':'МИРНЫЙ'}</span>
+    </div>
+  `).join('');
+
+  const isHost = s.hostId === myId;
+  document.getElementById('res-restart-btn').style.display = isHost ? 'inline-flex' : 'none';
 }
 
-function renderTimer(timerEnd,total){ if(!timerEnd)return; cancelAnimationFrame(timerRAF); let circ=201.1, circle=document.getElementById('tcircle'), numEl=document.getElementById('tnum'); let tick=()=>{ let rem=Math.max(0,(timerEnd-Date.now())/1000), sec=Math.ceil(rem); numEl.textContent=sec; numEl.className='timer-num'+(sec<=10?' low':''); circle.style.strokeDashoffset=circ*(1-rem/total); circle.style.stroke=sec<=10?'#e63946':'#06d6a0'; if(rem>0)timerRAF=requestAnimationFrame(tick); }; tick(); }
-function renderVoteTimer(timerEnd,total){ if(!timerEnd)return; cancelAnimationFrame(voteTimerRAF); let circ=201.1, circle=document.getElementById('vtcircle'), numEl=document.getElementById('vtnum'); let tick=()=>{ let rem=Math.max(0,(timerEnd-Date.now())/1000), sec=Math.ceil(rem); numEl.textContent=sec; circle.style.strokeDashoffset=circ*(1-rem/total); if(rem>0)voteTimerRAF=requestAnimationFrame(tick); }; tick(); }
+// ═══════════════════════════════════
+//  ТАЙМЕРЫ
+// ═══════════════════════════════════
+function renderTimer(timerEnd, total) {
+  if (!timerEnd) return;
+  cancelAnimationFrame(timerRAF);
+  const circle = document.getElementById('tcircle');
+  const numEl = document.getElementById('tnum');
+  const circ = 201.1;
 
-function openModal(mode){
-  modalMode=mode; document.getElementById('modal-title').textContent=mode==='create'?'Создать лобби':'Войти в лобби';
-  document.getElementById('m-code-field').style.display=mode==='join'?'block':'none';
-  document.getElementById('m-slots-field').style.display=mode==='create'?'block':'none';
-  document.getElementById('m-spycount-field').style.display=mode==='create'?'block':'none';
-  document.getElementById('m-category-field').style.display=mode==='create'?'block':'none';
-  document.getElementById('modal-ok-btn').textContent=mode==='create'?'Создать':'Войти';
+  function tick() {
+    const rem = Math.max(0, (timerEnd - Date.now()) / 1000);
+    const sec = Math.ceil(rem);
+    numEl.textContent = sec;
+    numEl.className = 'timer-num' + (sec <= 10 ? ' low' : '');
+    circle.style.strokeDashoffset = circ * (1 - rem / total);
+    circle.style.stroke = sec <= 10 ? '#e63946' : '#06d6a0';
+    if (rem > 0) timerRAF = requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+function renderVoteTimer(timerEnd, total) {
+  if (!timerEnd) return;
+  cancelAnimationFrame(voteTimerRAF);
+  const circle = document.getElementById('vtcircle');
+  const numEl = document.getElementById('vtnum');
+  const circ = 201.1;
+
+  function tick() {
+    const rem = Math.max(0, (timerEnd - Date.now()) / 1000);
+    const sec = Math.ceil(rem);
+    numEl.textContent = sec;
+    circle.style.strokeDashoffset = circ * (1 - rem / total);
+    if (rem > 0) voteTimerRAF = requestAnimationFrame(tick);
+  }
+  tick();
+}
+
+// ═══════════════════════════════════
+//  ЧАТ
+// ═══════════════════════════════════
+function appendChat(msg) {
+  ['chat-msgs', 'vchat-msgs'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const div = document.createElement('div');
+    if (msg.from === 'system') {
+      div.className = 'cmsg system';
+      div.textContent = msg.text;
+    } else {
+      const isMe = msg.playerId === myId;
+      div.className = 'cmsg' + (isMe ? ' me' : '');
+      div.innerHTML = `<span class="cauthor">${msg.avatar||''} ${msg.nick||'?'}</span>${msg.text}`;
+    }
+    el.appendChild(div);
+    el.scrollTop = el.scrollHeight;
+  });
+}
+
+function sendChat() {
+  const inp = document.getElementById('chat-in');
+  const text = inp.value.trim();
+  if (!text) return;
+  wsSend({ type: 'chat', text });
+  inp.value = '';
+}
+
+function sendVoteChat() {
+  const inp = document.getElementById('vchat-in');
+  const text = inp.value.trim();
+  if (!text) return;
+  wsSend({ type: 'chat', text });
+  inp.value = '';
+}
+
+// ═══════════════════════════════════
+//  ДЕЙСТВИЯ ИГРОКА
+// ═══════════════════════════════════
+function confirmRole() { wsSend({ type: 'confirm_role' }); }
+function endMyTurn() { wsSend({ type: 'end_turn' }); }
+
+function selectVote(id) {
+  if (hasVoted) return;
+  selectedVote = id;
+  document.querySelectorAll('.vote-card').forEach(c => c.classList.remove('selected'));
+  const cards = document.querySelectorAll('.vote-card');
+  cards.forEach(c => {
+    if (c.querySelector('div + div')?.textContent.trim() === state.players.find(p=>p.id===id)?.nick) {
+      c.classList.add('selected');
+    }
+  });
+  // Re-render to update selection
+  renderVote();
+  document.getElementById('confirm-vote-btn').disabled = false;
+}
+
+function submitVote() {
+  if (!selectedVote || hasVoted) return;
+  hasVoted = true;
+  wsSend({ type: 'vote', targetId: selectedVote });
+  renderVote();
+}
+
+function showVoteResult(msg) {
+  const isSpy = msg.isSpy;
+  showNotif(
+    isSpy
+      ? `🎯 ШПИОН НАЙДЕН! Это был ${msg.eliminatedNick}`
+      : `❌ ${msg.eliminatedNick} — мирный!`,
+    isSpy ? 'teal' : 'red'
+  );
+}
+
+// ═══════════════════════════════════
+//  МОДАЛКА
+// ═══════════════════════════════════
+function openModal(mode) {
+  modalMode = mode;
+  document.getElementById('modal-title').textContent = mode === 'create' ? 'Создать лобби' : 'Войти в лобби';
+  document.getElementById('m-code-field').style.display = mode === 'join' ? 'block' : 'none';
+  document.getElementById('m-slots-field').style.display = mode === 'create' ? 'block' : 'none';
+  document.getElementById('modal-ok-btn').textContent = mode === 'create' ? 'Создать' : 'Войти';
   document.getElementById('modal').classList.add('open');
-  setTimeout(()=>document.getElementById('m-nick').focus(),100);
+  setTimeout(() => document.getElementById('m-nick').focus(), 100);
 }
-function closeModal(){ document.getElementById('modal').classList.remove('open'); }
-function doConfirm(){
-  let nick=document.getElementById('m-nick').value.trim();
-  if(!nick){ showNotif('Введи псевдоним!','red'); return; }
-  if(!ws || ws.readyState!==1){ showNotif('Нет соединения!','red'); return; }
-  if(modalMode==='create'){
-    let maxSlots=parseInt(document.getElementById('m-slots').value);
-    let spyCount=parseInt(document.getElementById('m-spycount').value);
-    let category=document.getElementById('m-category').value;
-    wsSend({type:'create_lobby', nick, maxSlots, spyCount, category});
-  }else{
-    let code=document.getElementById('m-code').value.trim();
-    if(code.length!==5){ showNotif('Код — 5 цифр!','red'); return; }
-    wsSend({type:'join_lobby', nick, code});
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+
+function doConfirm() {
+  const nick = document.getElementById('m-nick').value.trim();
+  if (!nick) { showNotif('Введи псевдоним!', 'red'); return; }
+  if (!ws || ws.readyState !== 1) { showNotif('Нет соединения с сервером!', 'red'); return; }
+
+  if (modalMode === 'create') {
+    const maxSlots = parseInt(document.getElementById('m-slots').value);
+    wsSend({ type: 'create_lobby', nick, maxSlots });
+  } else {
+    const code = document.getElementById('m-code').value.trim();
+    if (code.length !== 5) { showNotif('Код — 5 цифр!', 'red'); return; }
+    wsSend({ type: 'join_lobby', nick, code });
   }
   closeModal();
 }
-function showNotif(text,color='red'){ let el=document.getElementById('notif'); el.textContent=text; el.className='notif'+(color==='teal'?' teal':''); el.style.display='block'; clearTimeout(el._t); el._t=setTimeout(()=>{ el.style.display='none'; },3500); }
-function handleAvatarFile(input){ let file=input.files[0]; if(!file)return; if(!file.type.startsWith('image/')){ showNotif('Только изображения!','red'); return; } let reader=new FileReader(); reader.onload=e=>{ let img=new Image(); img.onload=()=>{ let canvas=document.createElement('canvas'), size=200; canvas.width=size; canvas.height=size; let ctx=canvas.getContext('2d'); let minSide=Math.min(img.width,img.height); let sx=(img.width-minSide)/2,sy=(img.height-minSide)/2; ctx.drawImage(img,sx,sy,minSide,minSide,0,0,size,size); let photoUrl=canvas.toDataURL('image/jpeg',0.82); wsSend({type:'set_avatar',photoUrl}); }; img.src=e.target.result; }; reader.readAsDataURL(file); input.value=''; }
-window._lastGameOver=null;
+
+// ═══════════════════════════════════
+//  ЛОББИ ДЕЙСТВИЯ
+// ═══════════════════════════════════
+function startGame() { wsSend({ type: 'start_game' }); }
+function restartGame() { wsSend({ type: 'restart' }); }
+function leaveLobby() { wsSend({ type: 'leave' }); showScreen('menu'); }
+function goMenu() { wsSend({ type: 'leave' }); showScreen('menu'); }
+
+function onSlotsChange(val) {
+  document.getElementById('slots-disp').textContent = val;
+  wsSend({ type: 'update_slots', maxSlots: parseInt(val) });
+}
+
+function copyCode() {
+  const code = state?.code;
+  if (!code) return;
+  navigator.clipboard.writeText(code).then(() => showNotif('Код скопирован!', 'teal')).catch(() => {});
+}
+
+// ═══════════════════════════════════
+//  УТИЛИТЫ
+// ═══════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+}
+
+function showNotif(text, color='red') {
+  const el = document.getElementById('notif');
+  el.textContent = text;
+  el.className = 'notif' + (color === 'teal' ? ' teal' : '');
+  el.style.display = 'block';
+  clearTimeout(el._t);
+  el._t = setTimeout(() => { el.style.display = 'none'; }, 3500);
+}
+
+// game_over — сохраняем для экрана результатов
+window._lastGameOver = null;
+
+// ═══════════════════════════════════
+//  ЗАПУСК
+// ═══════════════════════════════════
 connect();
 </script>
 </body>
