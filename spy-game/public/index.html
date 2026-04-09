@@ -171,6 +171,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 </head>
 <body>
 <div class="noise"></div>
+<input type="file" id="avatar-file-input" accept="image/*" style="display:none" onchange="handleAvatarFile(this)">
 <div class="scanline"></div>
 
 <!-- ══ МЕНЮ ══ -->
@@ -559,7 +560,12 @@ function renderReveal() {
     } else {
       document.getElementById('rv-badge').className = 'reveal-badge civilian';
       document.getElementById('rv-badge').textContent = '✓ МИРНЫЙ';
-      document.getElementById('rv-icon').textContent = currentPlayer.avatar;
+      const rvIconEl = document.getElementById('rv-icon');
+      if (currentPlayer.photoUrl) {
+        rvIconEl.innerHTML = `<img src="${currentPlayer.photoUrl}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid var(--teal);display:block;margin:0 auto">`;
+      } else {
+        rvIconEl.textContent = currentPlayer.avatar;
+      }
       document.getElementById('rv-word').className = 'reveal-word civilian';
       document.getElementById('rv-word').textContent = (s.word || '—').toUpperCase();
       document.getElementById('rv-sub').textContent = 'Запомни! Не раскрывай слово напрямую. Говори ассоциации.';
@@ -613,7 +619,7 @@ function renderGame() {
     const d = document.createElement('div');
     d.className = 'player-slot' + (p.eliminated ? '' : ' filled') + (p.id === myId ? ' me' : '');
     if (p.eliminated) d.style.opacity = '.3';
-    d.innerHTML = `<div style="font-size:20px">${p.avatar}</div><div class="pname">${p.nick}${p.id===myId?' (Вы)':''}</div>`;
+    d.innerHTML = buildAvatarHtml(p, false, false) + `<div class="pname">${p.nick}${p.id===myId?' (Вы)':''}</div>`;
     gp.appendChild(d);
   });
 
@@ -641,9 +647,8 @@ function renderVote() {
     card.className = 'vote-card' + (selectedVote === p.id ? ' selected' : '') + (hasVoted ? ' voted' : '');
     const voteCount = counts[p.id] || 0;
     const pct = totalVoters > 1 ? Math.round(voteCount / (totalVoters - 1) * 100) : 0;
-    card.innerHTML = `
-      <div style="font-size:28px">${p.avatar}</div>
-      <div style="font-weight:700;font-size:13px;margin-top:4px">${p.nick}</div>
+    card.innerHTML = buildAvatarHtml(p, false, false) + `
+      <div style="font-weight:700;font-size:13px;margin-top:6px">${p.nick}</div>
       <div class="vote-count">${voteCount} голос(а)</div>
       <div class="vote-bar" style="width:${pct}%"></div>
     `;
@@ -677,12 +682,15 @@ function renderResult() {
   document.getElementById('res-word').textContent = (s.word || '—').toUpperCase();
 
   const sb = document.getElementById('res-scoreboard');
-  sb.innerHTML = '<div class="sep-label">ИТОГИ</div>' + s.players.map(p => `
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
-      <span>${p.avatar} ${p.nick}${p.id===myId?' (Вы)':''}</span>
+  sb.innerHTML = '<div class="sep-label">ИТОГИ</div>' + s.players.map(p => {
+    const avSmall = p.photoUrl
+      ? `<img src="${p.photoUrl}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:8px;border:1px solid rgba(255,255,255,.2)">`
+      : `<span style="font-size:18px;margin-right:6px">${p.avatar}</span>`;
+    return `<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+      <span style="display:flex;align-items:center">${avSmall}${p.nick}${p.id===myId?' (Вы)':''}</span>
       <span class="${p.id===s.spyId?'tag tag-red':'tag tag-green'}">${p.id===s.spyId?'ШПИОН':'МИРНЫЙ'}</span>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 
   const isHost = s.hostId === myId;
   document.getElementById('res-restart-btn').style.display = isHost ? 'inline-flex' : 'none';
@@ -869,6 +877,57 @@ function showNotif(text, color='red') {
   el.style.display = 'block';
   clearTimeout(el._t);
   el._t = setTimeout(() => { el.style.display = 'none'; }, 3500);
+}
+
+// ═══════════════════════════════════
+//  АВАТАРКИ
+// ═══════════════════════════════════
+
+// Строим HTML аватарки: фото или эмодзи
+function buildAvatarHtml(p, isMe, showUploadHint) {
+  const wrapClass = 'av-wrap' + (isMe ? ' me-wrap' : '');
+  const style = showUploadHint ? 'cursor:pointer' : '';
+  if (p.photoUrl) {
+    return `<div class="${wrapClass}" style="${style}">
+      <img class="av" src="${p.photoUrl}" alt="${p.nick}">
+      ${showUploadHint ? '<div class="av-upload-hint">📷</div>' : ''}
+    </div>`;
+  } else {
+    return `<div class="${wrapClass}" style="${style}">
+      <div class="av-emoji">${p.avatar}</div>
+      ${showUploadHint ? '<div class="av-upload-hint">📷</div>' : ''}
+    </div>`;
+  }
+}
+
+// Загрузка фото с устройства — сжимаем до 200x200px в canvas
+function handleAvatarFile(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (!file.type.startsWith('image/')) { showNotif('Только изображения!', 'red'); return; }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const size = 200;
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+      // Crop to square from center
+      const minSide = Math.min(img.width, img.height);
+      const sx = (img.width - minSide) / 2;
+      const sy = (img.height - minSide) / 2;
+      ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, size, size);
+      const photoUrl = canvas.toDataURL('image/jpeg', 0.82);
+      wsSend({ type: 'set_avatar', photoUrl });
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  // Reset input so same file can be re-selected
+  input.value = '';
 }
 
 // game_over — сохраняем для экрана результатов
