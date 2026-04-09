@@ -69,7 +69,7 @@ function buildStateFor(lobby, player) {
     spyId: isResult ? lobby.spyId : null,
     word: isResult ? lobby.word : (player.id === lobby.spyId ? null : lobby.word),
     isSpy: player.id === lobby.spyId,
-    players: lobby.players.map(p => ({ id: p.id, nick: p.nick, avatar: p.avatar, eliminated: p.eliminated })),
+    players: lobby.players.map(p => ({ id: p.id, nick: p.nick, avatar: p.avatar, photoUrl: p.photoUrl || null, eliminated: p.eliminated })),
     round: lobby.round, turnIdx: lobby.turnIdx, roundTurnsDone: lobby.roundTurnsDone,
     revealIdx: lobby.revealIdx,
     votes: lobby.phase === 'vote' ? lobby.votes : {},
@@ -264,6 +264,14 @@ wss.on('connection', (ws) => {
       if (active.filter(p => lobby.votes[p.id] !== undefined).length >= active.length) {
         clearTimer(lobby); resolveVote(lobby);
       }
+    } else if (type === 'set_avatar') {
+      if (lobby.phase !== 'lobby') return;
+      const photoUrl = (msg.photoUrl || '').toString();
+      // max ~200KB base64
+      if (photoUrl.length > 280000) { send(ws, { type: 'error', text: 'Фото слишком большое! Макс 200KB.' }); return; }
+      if (photoUrl && !photoUrl.startsWith('data:image/')) { return; }
+      player.photoUrl = photoUrl || null;
+      broadcastState(lobby);
     } else if (type === 'chat') {
       const text = (msg.text || '').toString().trim().slice(0, 120);
       if (!text) return;
